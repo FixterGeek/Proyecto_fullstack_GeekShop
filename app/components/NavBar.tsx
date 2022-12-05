@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Link } from '@remix-run/react';
 
-export default function NavBar() {
+export default function NavBar({ badgeNumber }: { badgeNumber?: number }) {
   const [open, setOpen] = useState(false);
 
   const onToggle = () => setOpen((value) => !value);
@@ -30,9 +30,11 @@ export default function NavBar() {
             <span className='text-2xl'>
               <HiOutlineShoppingBag />
             </span>
-            <span className='bg-violet-500 text-white rounded-full p-1 text-xs h-[20px] w-[20px] flex items-center justify-center font-semibold absolute top-[-10px] right-[-10px]'>
-              3
-            </span>
+            {badgeNumber ? (
+              <span className='bg-violet-500 text-white rounded-full p-1 text-xs h-[20px] w-[20px] flex items-center justify-center font-semibold absolute top-[-10px] right-[-10px]'>
+                {badgeNumber}
+              </span>
+            ) : null}
           </p>
         </Link>
       </nav>
@@ -43,7 +45,7 @@ export default function NavBar() {
             initial={{ opacity: 0, y: -250 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -250 }}
-            className='bg-white flex flex-col items-start pb-6 absolute w-full z-10 mt-16'
+            className='bg-white flex flex-col items-start pb-6 absolute w-full z-10 mt-16 border-b border-b-zinc-200'
           >
             <Link className='w-full' to='/login'>
               <button className='px-3 py-3 text-lg hover:bg-zinc-200 w-full text-left'>
