@@ -44,7 +44,10 @@ export default function CartProduct({
           value={product.quantity}
         />
       </td>
-      <td>{product.price}</td>
+      <td>
+        ${Number(product.price.replace('$', '')) * Number(product.quantity)}
+        .00
+      </td>
     </motion.tr>
   );
 }
