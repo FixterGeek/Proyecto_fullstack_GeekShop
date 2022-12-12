@@ -1,24 +1,30 @@
-import { Link, useLoaderData } from '@remix-run/react';
+import { Link, useFetcher, useLoaderData } from '@remix-run/react';
 import NavBar from '~/components/NavBar';
 import { type ShirtType } from './shirts';
 import CartProduct from '../components/CartProduct';
-
+import { type ChangeEvent} from 'react';
+import { getSessionSimplified} from '~/sessions';
+import { type ActionFunction, LoaderFunction  } from '@remix-run/node';
 interface LoaderData {
   items: ShirtType[];
 }
-export const loader: LoaderFunction = async () => {
-  const items = [
-    {
-      id: 3,
-      title: 'Invertocat Pride Tee',
-      price: '$30.00',
-      img: 'https://cdn.shopify.com/s/files/1/0051/4802/products/Webshop_TShirt_Pride2022_VintageBlack_Pride_600x600_crop_center.png?v=1653680303',
-    },
-  ];
+export const action: ActionFunction = async ({ request }) => {
+  /* */
+}
+
+export const loader: LoaderFunction = async ({ request }) => {
+  let items = {};
+  let cart = {total:0, items:[{}]};
+  const session = await getSessionSimplified(request);
+  if(session.has('cart')){
+    cart = JSON.parse(session.get('cart'));
+    items= cart.items;
+  }
   return { items };
 };
 export default function Cart() {
   const { items } = useLoaderData<LoaderData>();
+  const fetcher = useFetcher();
   return (
     <>
       <NavBar />
@@ -32,15 +38,25 @@ export default function Cart() {
             <th>Cantidad</th>
             <th>Total</th>
           </tr>
-
-          {items.map((item) => (
-            <CartProduct product={item} key={item.id} />
+          { items == null ? null :  items.map((item) => (
+            <CartProduct product={item} key={item.key} 
+              onClick={() => {
+                item.qty = 0;
+                fetcher.submit(item, { method:"post", action: '/api/cart'});
+              }}
+              onChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+                if(Number(value) >= 0){
+                  item.qty = Number(value);
+                  fetcher.submit( item, { method:"post", action: '/api/cart'});
+                }
+              }
+            } />
           ))}
         </table>
         <article className='flex flex-col items-end'>
           <div className='flex items-end gap-2 mb-4'>
             <h2 className='font-bold text-2xl'>Subtotal</h2>
-            <span>$30.00</span>
+            <span>${items == null ? '0' : items.reduce((prev, product)=>{ return prev + ( Number(product.qty * Number(product.price.replace("$",""))) ) },0) }.00</span>
           </div>
           <p className='text-lg mb-4'>
             El envío y los impuestos se calculan al pagar
