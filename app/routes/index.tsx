@@ -1,12 +1,24 @@
-import { Link } from '@remix-run/react';
+import { Link, useFetcher } from '@remix-run/react';
+import { useEffect } from 'react';
 import Button from '~/components/Button';
 import Category from '~/components/Category';
 import NavBar from '~/components/NavBar';
 
 export default function Index() {
+  const fetcher=useFetcher();
+
+  useEffect(() =>{
+    fetcher.load('/api/cart');
+    console.log(fetcher);
+  },[]);
+
+  useEffect(() =>{
+    console.log(fetcher);
+  },[fetcher]);
+
   return (
     <>
-      <NavBar />
+      <NavBar badgeNumber={fetcher.data?.cart.items.length}/>
       <section className='bg-[rgba(0,0,0,0.5)] text-white flex flex-col h-[500px] lg:h-[800px] lg:px-20 justify-center relative px-12 overflow-hidden'>
         <img
           className='-z-10 absolute object-cover top-0 left-0'
