@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import NavBar from '~/components/NavBar';
 import ProductCard from '~/components/ProductCard';
 import { getSessionSimplified} from '~/sessions';
+import { db } from "~/utils/db.server";
 
 export interface ShirtType {
   title: string;
@@ -37,7 +38,7 @@ export const action: ActionFunction = async ({ request }) => {
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const shirts = [
+  /*const shirts = [
     {
       key: 3,
       title: 'Invertocat Pride Tee',
@@ -66,7 +67,9 @@ export const loader: LoaderFunction = async ({ request }) => {
       img: 'https://cdn.shopify.com/s/files/1/0051/4802/products/TShirt_GitHub_Username_Unisex_CoolBlue_1_600x600_crop_center.jpg?v=1629732698',
       qty: 0
     },
-  ];
+  ];*/
+  const shirts = await db.product.findMany({ take:100, orderBy: { id: 'desc'} });
+
   let cart = {};
   const session = await getSessionSimplified(request);
   if(session.has('cart')){

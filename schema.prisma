@@ -16,3 +16,11 @@ model User {
   name        String?
   hash        String
 }
+model Product  {
+  id String  @id  @default(auto())  @map("_id")  @db.ObjectId
+  key Int  @unique
+  title String
+  price String?
+  img String
+  qty Int
+}
