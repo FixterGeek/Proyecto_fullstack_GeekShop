@@ -85,7 +85,7 @@ export default function Crud(){
                                         <img width='70' height='70' src={producto.img}/>
                                     </figure>
                                     <td style={{ padding: '0 8px'}}>
-                                        <Link className="text-blue-500" to={`${producto.ids}/edit`}>
+                                        <Link className="text-blue-500" to={`${producto.id}/edit`}>
                                             {producto.id}
                                         </Link>
                                     </td>
