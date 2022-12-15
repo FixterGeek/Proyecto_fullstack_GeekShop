@@ -1,9 +1,12 @@
 import { type ShirtType } from '~/routes/shirts';
+import { type ChangeEvent } from 'react';
 
 interface CartProductProps {
   product: ShirtType;
+  onChange?: (arg0: ChangeEvent<HTMLInputElement>) => void;
+  onClick?: () => void;
 }
-export default function CartProduct({ product }: CartProductProps) {
+export default function CartProduct({ product, onChange, onClick }: CartProductProps) {
   return (
     <tr className=''>
       <td className='w-[150px] px-8 py-8'>
@@ -12,7 +15,8 @@ export default function CartProduct({ product }: CartProductProps) {
       <td className='px-8 '>
         <h2 className='font-semibold text-lg'>{product.title}</h2>
         <p className='font-thin'>Linear/Men’s / XS</p>
-        <button className='text-gray-500 pt-8'>Quitar</button>
+        <button onClick={onClick}
+          className='text-gray-500 pt-8'>Quitar</button>
       </td>
       <td className='px-8'>
         <span>{product.price}</span>
@@ -21,10 +25,11 @@ export default function CartProduct({ product }: CartProductProps) {
         <input
           className='border-2 border-gray-300 py-2 px-4 rounded'
           type='number'
-          defaultValue={1}
+          defaultValue={product.qty}
+          onChange={onChange}
         />
       </td>
-      <td>{product.price}</td>
+      <td>{ `$${String(Number(product.price.replace("$","")) * product.qty)}.00`}</td>
     </tr>
   );
 }
